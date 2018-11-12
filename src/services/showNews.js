@@ -7,7 +7,7 @@ export const showNews = (news) => {
   news.forEach(item => {
     const newsBlock = document.createElement('div');
     newsBlock.className = 'news-block';
-
+    
     const titleBlock = document.createElement('div');
     titleBlock.className = 'title-block';
     

@@ -1,4 +1,3 @@
-'use strict';
 import {apiKey} from '../settings';
 
 export const getNewsSources = () => {
