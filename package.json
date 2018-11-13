@@ -1,0 +1,31 @@
+{
+  "name": "newsapp.github.io",
+  "version": "1.0.0",
+  "description": "This app allow you to select the latest news",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KukolcaAlexandra/NewsApp.github.io.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KukolcaAlexandra/NewsApp.github.io/issues"
+  },
+  "homepage": "https://github.com/KukolcaAlexandra/NewsApp.github.io#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.1.5",
+    "@babel/core": "^7.1.5",
+    "eslint": "^5.9.0",
+    "webpack": "^4.25.1",
+    "webpack-cli": "^3.1.2"
+  },
+  "dependencies": {
+    "eslint-config-airbnb-base": "^13.1.0"
+  }
+}
