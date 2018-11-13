@@ -1,8 +1,10 @@
-export const showNews = (news) => {
+import { months }  from '../consts/months';
+
+export const renderNewsBlock = (news) => {
   const newsContainer = document.querySelector('.news-container');
   let items = [];
 
-  deleteNews();
+  removeNewsBlocks();
 
   news.forEach(item => {
     const newsBlock = document.createElement('div');
@@ -14,39 +16,48 @@ export const showNews = (news) => {
     const image = document.createElement('img');
     image.className = 'image';
     image.src = item.urlToImage;
-        
+       
+    const titleDate = document.createElement('div');
+    titleDate.className = 'title-date';
     const title = document.createElement('h3');
     title.className = 'title';
     title.innerHTML = item.title;
 
     const date = new Date(item.publishedAt);
-    const displayDate = `${date.getDate()} ${date.getMonth()} ${date.getFullYear()}`;
-    console.log(displayDate);
-    titleBlock.appendChild(image);
-    titleBlock.appendChild(title);
+    const displayDate = `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
     
+    const dateBlock = document.createElement('div');
+    dateBlock.className = 'date-block';
+    dateBlock.innerHTML = displayDate;
+    
+    titleDate.appendChild(title);
+    titleDate.appendChild(dateBlock);    
+
+    titleBlock.appendChild(image);
+    titleBlock.appendChild(titleDate);
+        
     const descriptionBlock = document.createElement('div');
+    descriptionBlock.className = 'description-block';
 
     const description = document.createElement('div');
     description.className = 'description';
     description.innerHTML = item.description;
 
     const linkBlock = document.createElement('div');
-    
+    linkBlock.className = 'link-block';
     const link = document.createElement('a');
+    
     link.setAttribute('href', item.url);
     link.setAttribute('target', '_blank');
     link.innerHTML = 'read more';
     
     linkBlock.appendChild(link);
-    //link.href = item.url;
-
+    
     descriptionBlock.appendChild(description);
-    //descriptionBlock.appendChild(link);
-    descriptionBlock.appendChild(linkBlock);
-
+    
     newsBlock.appendChild(titleBlock);
     newsBlock.appendChild(descriptionBlock);
+    newsBlock.appendChild(linkBlock);
 
     items.push(newsBlock);
   });
@@ -54,10 +65,9 @@ export const showNews = (news) => {
   items.forEach(news => {
     newsContainer.appendChild(news);
   })
-  console.log(newsContainer);
 }
 
-const deleteNews = () => {
+const removeNewsBlocks = () => {
   const newsContainer = document.querySelector('.news-container');
   const childs = [...newsContainer.children];
   

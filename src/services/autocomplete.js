@@ -3,6 +3,7 @@ export class Autocomplete {
     this.input = input;
     this.data = data;
     this.currentFocus = null;
+    
     this.closeAllLists =  this.closeAllLists.bind(this);
     this.clickHandler = this.clickHandler.bind(this);
     this.inputHandler = this.inputHandler.bind(this);
@@ -15,68 +16,81 @@ export class Autocomplete {
     document.addEventListener('click', this.clickHandler);
   }
 
-  addActive(item) {
-    if (!item) return false;
-    this.removeActive(item);
-    if (this.currentFocus >= item.length) this.currentFocus = 0;
-    if (this.currentFocus < 0) this.currentFocus = (item.length - 1);
-    item[this.currentFocus].classList.add('autocomplete-active');
+  addActive(elem) {
+    if (!elem) return false;
+    this.removeActive(elem);
+    if (this.currentFocus >= elem.length) this.currentFocus = 0;
+    if (this.currentFocus < 0) this.currentFocus = (elem.length - 1);
+    elem[this.currentFocus].classList.add('autocomplete-active');
   }
 
-  removeActive(item) {
-    for (let i = 0; i < item.length; i++) {
-      item[i].classList.remove('autocomplete-active');
+  removeActive(elem) {
+    for (let i = 0; i < elem.length; i++) {
+      elem[i].classList.remove('autocomplete-active');
     }
   }
 
-  closeAllLists(element) {
-    let item = document.getElementsByClassName('autocomplete-items');
-    for (let i = 0; i < item.length; i++) {
-      if (element != item[i] && element != this.input) {
-        item[i].parentNode.removeChild(item[i]);
+  closeAllLists(currentElement) {
+    let elem = document.getElementsByClassName('autocomplete-items');
+    for (let i = 0; i < elem.length; i++) {
+      if (currentElement != elem[i] && currentElement != this.input) {
+        elem[i].parentNode.removeChild(elem[i]);
       }
     }
   }
 
   inputHandler(e) {
-    let itemContainer;
-    let item;
-    let val = this.input.value;
+    let elemContainer;
+    let elem;
+    let input = e.target;
+    let value = input.value;
+    
     this.closeAllLists();
-    if (!val) { return false;}
+    
+    if (!value) { 
+      return false;
+    }
+    
     this.currentFocus = -1;
-    itemContainer = document.createElement('div');
-    itemContainer.setAttribute('id', `${this.input.id}autocomplete-list`);
-    itemContainer.setAttribute('class', 'autocomplete-items');
-    this.input.parentNode.appendChild(itemContainer);
-    for (let i = 0; i < this.data.length; i++) {
-      if (this.data[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
-        item = document.createElement('div');
-        item.innerHTML = `<strong>${this.data[i].substr(0, val.length)}</strong>`;
-        item.innerHTML += this.data[i].substr(val.length);
-        item.innerHTML += `<input type='hidden' value='${this.data[i]}'>`;
-        item.addEventListener('click', (e) => {
-          this.input.value = e.target.getElementsByTagName('input')[0].value;
+    elemContainer = document.createElement('div');
+    elemContainer.setAttribute('id', `${input.id}autocomplete-list`);
+    elemContainer.setAttribute('class', 'autocomplete-items');
+    input.parentNode.appendChild(elemContainer);
+    
+    this.data.forEach(dataItem => {
+      if (dataItem.substr(0, value.length).toUpperCase() === value.toUpperCase()) {
+        elem = document.createElement('div');
+        elem.innerHTML = `<strong>${dataItem.substr(0, value.length)}</strong>` +
+                         `${dataItem.substr(value.length)}<input type='hidden' value='${dataItem}'>`;
+        elem.addEventListener('click', (e) => {
+          input.value = e.target.getElementsByTagName('input')[0].value;
           this.closeAllLists();
         });
-        itemContainer.appendChild(item);
+        elemContainer.appendChild(elem);
       }
-    }
+    });
   }
 
   keydownHandler(e) {
-    let item = document.getElementById(`${this.input.id}autocomplete-list`);
-    if (item) item = item.getElementsByTagName('div');
+    let input = e.target;
+    let elem = document.getElementById(`${input.id}autocomplete-list`);
+    
+    if (elem) elem = elem.getElementsByTagName('div');
+
     if (e.keyCode == 40) {
       this.currentFocus++;
-      this.addActive(item);
-    } else if (e.keyCode == 38) { 
-      this.currentFocus--;
-      this.addActive(item);
-    } else if (e.keyCode == 13) {
-      e.preventDefault();
-      if (this.currentFocus > -1) {
-        if (item) item[this.currentFocus].click();
+      this.addActive(elem);
+    } else {
+      if (e.keyCode == 38) { 
+        this.currentFocus--;
+        this.addActive(elem);
+      } else {
+        if (e.keyCode == 13) {
+          e.preventDefault();
+          if (this.currentFocus > -1) {
+            if (elem) elem[this.currentFocus].click();
+          }
+        }
       }
     }
   }
